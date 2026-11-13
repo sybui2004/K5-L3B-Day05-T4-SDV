@@ -1,14 +1,21 @@
 # Prototype — T4 · Trợ lý khiếu nại "không đúng mô tả"
 
-**Mở nhanh (không cần AI thật):** mở `index.html` bằng trình duyệt (Chrome/Edge). Không cần cài gì, không đăng nhập.
-
-**Mở kèm lời gọi AI thật (bonus):**
+**Mở ứng dụng:**
 1. Cài Node.js ≥ 20.12.
-2. Trong thư mục `prototype/`: copy `.env.example` thành `.env`, điền `OPENROUTER_API_KEY=...`. **Không commit `.env`** (đã có trong `.gitignore`).
+2. Trong thư mục `prototype/`: copy `.env.example` thành `.env`, điền `OPENROUTER_API_KEY=...`.
 3. Chạy `npm start`, rồi mở <http://localhost:3000>.
-4. Ở ca **K3** hoặc **K4**, bấm **✦ So bằng AI thật**.
 
-**Công cụ:** HTML/CSS/JS thuần, dựng cùng coding agent. **Mock:** dữ liệu và câu AI chính là dựng (`cases.js`). **Lời gọi AI thật:** có. Nút "So bằng AI thật" gửi *tin người mua + mô tả lúc đặt + mô tả hiện tại* (toàn dữ liệu dựng) qua `server.mjs` tới **DeepSeek V4 Flash** trên OpenRouter (khoảng $0.0003 mỗi lần gọi). Muốn đổi model thì thêm dòng `OPENROUTER_MODEL=...` vào `.env`. Kết quả trả về là JSON có khuôn cố định (kết luận, căn cứ, còn thiếu, câu trả lời) và được hiện trong chat. AI chỉ so sánh, **không gọi tool nào**. Mỗi lần gọi được ghi vào `ai-log/` (không chứa key) để làm bằng chứng.
+## 2 Chế độ Demo trên giao diện (Toggle Mode)
+
+Thanh điều khiển **"Chế độ Demo"** ở đầu trang cho phép chuyển đổi tức thì giữa:
+1. **📋 Không có AI (Workflow kịch bản)**: Chạy kịch bản dựng sẵn cố định theo spec §3. AI chỉ có nút bấm phụ so sánh tham khảo ở K3/K4.
+2. **⚡ Có AI thật (AI quyết định Workflow)**: AI thật (DeepSeek V4 Flash / model trong `.env`) đọc ngữ cảnh hội thoại, snapshot lúc đặt, bằng chứng và **trực tiếp quyết định bước tiếp theo**:
+   - **Hỏi lại để lấy context** (`hoi_lai`): Khi người dùng nói cụt ngủn ("hàng sai rồi, xử lý đi"...), AI không đoán mò mà đưa ra câu hỏi thu thập context và chip chọn đơn/lỗi.
+   - **Tố cáo hàng giả & đòi khoá shop** (`chuyen_hang_gia`): Bắt buộc HITL chuyển sang bộ phận chuyên trách kiểm tra hàng giả (24h). AI tuyệt đối không hứa phạt shop hay hoàn tiền ngay.
+   - **Soạn yêu cầu trả hàng** (`soan_tra_hang`): Khi đủ căn cứ hàng lệch mô tả lúc đặt (K1, K3).
+   - **Giải thích chưa đủ căn cứ** (`giai_thich_chua_du`): Khi hàng khớp mô tả (K4), người mua có quyền tự gửi hoặc phản bác.
+   - **Kịch bản AI TỰ NHẬN SAI & HITL SÀN** (`K-Sai` hoặc khi người mua phản bác *"Bạn nói sai rồi!"*): AI phát hiện nghi vấn mâu thuẫn nhận định hoặc người mua chỉ ra sai sót → AI thừa nhận khả năng hiểu nhầm và **chủ động kích hoạt HITL (Human-in-the-Loop)** chuyển toàn bộ hồ sơ sang Nhân viên sàn Shopee xử lý trực tiếp.
+   - **Bắt buộc HITL**: Mọi trường hợp AI có độ tự tin thấp (`do_tu_tin: "thap"`), nghi hàng giả, hoặc người mua phản đối gay gắt đều tự động kích hoạt HITL.
 
 | File | Nội dung | Người phụ trách |
 |---|---|---|

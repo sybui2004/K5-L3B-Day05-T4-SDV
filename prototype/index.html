@@ -10,6 +10,14 @@
 <header>
   <h1>Trò chuyện với Shopee: trợ lý khiếu nại "không đúng mô tả"</h1>
   <p class="sub">Prototype thiết kế · dữ liệu dựng · hôm nay 12/11/2026. Cùng một trợ lý AI: người mua và người bán thấy gì khi AI không chắc, và <b>ai quyết</b>. AI không có nút hoàn tiền, từ chối hay phạt shop.</p>
+  <div class="mode-bar">
+    <div class="mode-switch" role="radiogroup" aria-label="Chọn chế độ demo">
+      <span class="mode-lbl">Chế độ Demo:</span>
+      <button type="button" id="mode-script" class="mode-btn on" data-mode="script">📋 Không có AI (Workflow kịch bản)</button>
+      <button type="button" id="mode-ai" class="mode-btn" data-mode="ai">⚡ Có AI thật (AI quyết định Workflow)</button>
+    </div>
+    <div id="ai-mode-desc" class="mode-desc">Workflow kịch bản: Chạy kịch bản dựng sẵn theo spec.</div>
+  </div>
   <nav id="cases" aria-label="Chọn ca"></nav>
   <label class="annt"><input type="checkbox" id="ann" checked> Hiện số chú thích ①–⑧ (HAX/PAIR)</label>
 </header>
@@ -23,6 +31,7 @@
         <span class="tag-ai"><span class="n">1</span>Trợ lý AI</span>
       </div>
       <div id="order" class="order"></div>
+      <div id="ai-mode-banner" class="ai-banner" hidden></div>
       <div id="chat" class="chat"></div>
       <form id="composer" autocomplete="off">
         <input id="free" placeholder="Nhập tin nhắn (thử một ca lạ)…">

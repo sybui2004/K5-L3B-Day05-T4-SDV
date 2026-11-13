@@ -1,0 +1,37 @@
+{
+  "thoi_gian": "2026-11-13T04:42:59.297Z",
+  "ca": "wf-K_SAI",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K_SAI",
+    "buyer": "Bạn nói sai rồi! Tôi đo lòng rổ bên trong chỉ 4.2L chứ không phải 5L như shop bảo, bạn xem lại đi!",
+    "currentOrderId": "D2",
+    "isRebuttal": true,
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "Số đo của bạn khớp dung tích lòng rổ 5L nên chưa đủ căn cứ."
+      },
+      {
+        "role": "user",
+        "content": "Bạn nói sai rồi! Tôi đo lòng rổ bên trong chỉ 4.2L chứ không phải 5L như shop bảo, bạn xem lại đi!"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua phản bác trực tiếp nhận định trước đó của AI ('Bạn nói sai rồi!'), khẳng định số đo lòng rổ là 4.2L chứ không phải 5L. Đây là tình huống AI tự nhận sai (ai_nhan_sai = true) theo quy tắc chuyen_nhan_vien (6a). AI cần nhận lỗi lịch sự và chủ động chuyển nhân viên sàn thẩm định ngay.",
+    "hanh_dong": "chuyen_nhan_vien",
+    "don_hang": "D2",
+    "ly_do_khieu_nai": "hàng không đúng mô tả",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": true,
+    "can_hitl": true,
+    "ly_do_hitl": "AI tự nhận sai do người mua phản bác số đo lòng rổ (4.2L thay vì 5L), cần nhân viên sàn thẩm định lại bằng chứng và mô tả lúc đặt.",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Cảm ơn bạn đã phản hồi. Tôi nhận thấy nhận định trước đó của mình chưa chính xác. Để đảm bảo công bằng, tôi sẽ chuyển khiếu nại của bạn đến nhân viên sàn Shopee thẩm định lại ngay. Nhân viên sẽ kiểm tra mô tả lúc đặt và bằng chứng của bạn, sau đó liên hệ trong vòng 24h. Xin lỗi vì sự bất tiện này.",
+    "cau_hoi_them": "Bạn vui lòng cung cấp thêm ảnh chụp thước đo lòng rổ để nhân viên xem xét nhé.",
+    "can_cu": [],
+    "con_thieu": []
+  },
+  "ms": 6928
+}

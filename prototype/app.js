@@ -26,6 +26,30 @@ const pill = (m) => `<span class="pill ${MUC[m][0]}">${MUC[m][1]}</span>`;
 
 let S;          // trạng thái của ca đang mở
 let clock = 30; // đồng hồ giả: 10:30 rồi +1 phút mỗi sự kiện
+let demoMode = 'script'; // 'script' (workflow kịch bản) hoặc 'ai' (AI thật quyết định workflow)
+
+function setDemoMode(mode) {
+  demoMode = mode;
+  const btnScript = $('#mode-script'), btnAi = $('#mode-ai');
+  if (btnScript) btnScript.classList.toggle('on', mode === 'script');
+  if (btnAi) btnAi.classList.toggle('on', mode === 'ai');
+  const desc = $('#ai-mode-desc');
+  const banner = $('#ai-mode-banner');
+  if (mode === 'ai') {
+    if (desc) desc.textContent = '⚡ Chế độ AI thật: AI tự quyết định luồng, hỏi lại khi tin cụt, tự nhận sai và kích hoạt HITL khi có rủi ro!';
+    if (banner) {
+      banner.hidden = false;
+      banner.innerHTML = '🤖 <b>Chế độ AI Workflow:</b> AI thật đang phân tích & quyết định quy trình theo thời gian thực (hỏi lại khi thiếu context, chuyển chuyên trách khi nghi hàng giả, tự nhận sai & HITL sàn).';
+    }
+  } else {
+    if (desc) desc.textContent = '📋 Workflow kịch bản: Chạy kịch bản dựng sẵn theo spec §3.';
+    if (banner) {
+      banner.hidden = true;
+      banner.innerHTML = '';
+    }
+  }
+  if (S && S.caseId) reset(S.caseId);
+}
 
 function now() {
   clock += 1;
@@ -46,7 +70,11 @@ function reset(caseId) {
   document.querySelectorAll('#cases button').forEach((b) => b.classList.toggle('on', b.dataset.id === caseId));
   setOrder(null);
   renderSeller(); renderStaff(); renderLog();
-  FLOWS[S.c.kieu].start(S.c);
+  if (demoMode === 'ai') {
+    triggerAiWorkflow(S.c);
+  } else {
+    FLOWS[S.c.kieu].start(S.c);
+  }
 }
 
 function setOrder(id) {
@@ -404,6 +432,26 @@ const FLOWS = {
     },
   },
 
+  aiNhanSai: {
+    start(c) {
+      msg('me', c.buyer + thumbs(S.att));
+      readOrder(c);
+      log(null, 'user', 'Người mua phản bác: số đo thực tế 4.2L mâu thuẫn nhận định trước');
+      log('chuyen_truong_nhom', 'human', 'HITL: AI tự nhận sai → chuyển nhân viên sàn Shopee');
+      const card = transfer({
+        label: 'Trưởng nhóm khiếu nại (HITL - AI tự nhận sai)', sla: 'nhân viên sàn thẩm tra trực tiếp',
+        summary: `Đơn #2611-0002 · Nồi chiên không dầu · AI nhận thấy nghi vấn mâu thuẫn thông số khi khách phản bác đo 4.2L`,
+        flags: ['Người mua phản ánh đo lòng rổ bên trong chỉ 4.2L', 'AI phát hiện nhận định trước đó có thể hiểu nhầm dung tích', 'Bắt buộc nhân viên sàn Shopee trực tiếp thẩm định'],
+        decide: true,
+        ev: [...S.att],
+      });
+      msg('ai', `<div class="card-ai-sai">
+        <h4>⚠️ AI tự phát hiện nghi vấn & kích hoạt HITL</h4>
+        <p><b>Xin lỗi bạn:</b> Sau khi xem lại phản ánh đo thực tế (4.2L), mình nhận thấy nhận định trước đó có thể chưa chuẩn xác về phương pháp đo dung tích lòng nồi. Để bảo đảm tối đa quyền lợi của bạn, mình chủ động <b>chuyển hồ sơ sang nhân viên sàn Shopee</b> trực tiếp thẩm định.</p>
+      </div>` + card);
+    },
+  },
+
   caLa: {
     start(c) {
       msg('ai', `<p>${c.chao}</p>`);
@@ -415,6 +463,166 @@ const FLOWS = {
 function piiReply(html) {
   log(null, 'ban', 'Yêu cầu SĐT/địa chỉ bên kia: không tool nào trả thông tin này, từ chối');
   msg('ai', html + '<div class="btns"><button class="btn out" data-act="chat-shop">Chat với shop trong app</button></div>');
+}
+
+/* ---------- AI WORKFLOW: AI THẬT QUYẾT ĐỊNH QUY TRÌNH ---------- */
+
+async function triggerAiWorkflow(c, extraPrompt = '', isRebuttal = false) {
+  const buyerMsg = extraPrompt || c.buyer || '';
+  if (!extraPrompt) {
+    msg('me', buyerMsg + thumbs(S.att));
+    if (c.order) readOrder(c);
+  }
+
+  const loadingEl = msg('ai', '<p class="meta"><i>🤖 AI thật đang phân tích ngữ cảnh và quyết định workflow tiếp theo...</i></p>');
+
+  try {
+    const payload = {
+      caseId: S.caseId,
+      buyer: buyerMsg,
+      currentOrderId: S.order || c.order,
+      moTa: c.moTa || S.mt,
+      boiCanh: c.boiCanh || '',
+      att: [...S.att],
+      isRebuttal: Boolean(isRebuttal || c.isRebuttal || /(sai rồi|nhầm rồi|xem lại đi|tôi đo cả vỏ|không đúng)/i.test(buyerMsg)),
+      messages: S.chatHistory || [{ role: 'user', content: buyerMsg }]
+    };
+
+    const res = await fetch('/api/ai-workflow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    loadingEl.remove();
+
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    const k = data.ketQua;
+
+    if (!S.chatHistory) S.chatHistory = [];
+    S.chatHistory.push({ role: 'user', content: buyerMsg });
+    S.chatHistory.push({ role: 'assistant', content: k.cau_tra_loi });
+
+    renderAiWorkflowResult(k, data);
+  } catch (err) {
+    loadingEl.remove();
+    log(null, 'sys', `Lỗi kết nối AI: ${err.message}. Chuyển sang kịch bản dựng sẵn.`);
+    msg('sys', `Không gọi được AI Workflow (${err.message}). Hiển thị theo kịch bản chuẩn.`);
+    if (FLOWS[S.c.kieu]) FLOWS[S.c.kieu].start(S.c);
+  }
+}
+
+function renderAiWorkflowResult(k, data) {
+  const hitlPill = k.can_hitl ? '<span class="pill p-human">HITL Bắt buộc</span>' : '<span class="pill p-auto">Tự động</span>';
+  const confPill = `<span class="pill ${k.do_tu_tin === 'cao' ? 'p-auto' : k.do_tu_tin === 'thap' ? 'p-ban' : 'p-ask'}">Độ tự tin: ${k.do_tu_tin}</span>`;
+
+  log(k.can_hitl ? 'chuyen_truong_nhom' : 'doc_don_hang', k.can_hitl ? 'human' : 'auto',
+    `<b>AI Workflow:</b> Quyết định hành động <code>${k.hanh_dong}</code> · ${hitlPill} ${confPill}`);
+
+  // 1. Kịch bản AI tự nhận sai hoặc phát hiện mâu thuẫn
+  if (k.ai_nhan_sai) {
+    log('chuyen_truong_nhom', 'human', '<b>AI TỰ NHẬN SAI:</b> Nhận diện nghi vấn/mâu thuẫn thông số → Chủ động HITL sàn Shopee');
+    const card = transfer({
+      label: 'Trưởng nhóm khiếu nại (HITL - AI tự nhận sai)',
+      sla: 'nhân viên sàn xử lý ưu tiên',
+      summary: k.ly_do_hitl || 'AI tự nhận thấy phân tích trước đó có thể hiểu nhầm phương pháp đo của khách',
+      flags: [k.ly_do_hitl || 'AI kích hoạt cơ chế tự nhận sai', 'Chuyển nhân viên sàn Shopee thẩm tra trực tiếp'],
+      decide: true,
+      ev: [...S.att]
+    });
+    msg('ai', `<div class="card-ai-sai">
+      <h4>⚠️ AI TỰ PHÁT HIỆN NGHI VẤN / NHẬN ĐỊNH SAI → HITL SÀN SHOPEE</h4>
+      <p>${esc(k.cau_tra_loi)}</p>
+      <div class="meta" style="margin-top:6px;font-size:12px;color:#b91c1c;">
+        <b>Phân tích nội bộ AI:</b> ${esc(k.phan_tich)}<br>
+        <b>Lý do kích hoạt HITL:</b> ${esc(k.ly_do_hitl)}
+      </div>
+    </div>` + card);
+    return;
+  }
+
+  // 2. Kịch bản chuyển hàng giả (HITL chuyên trách)
+  if (k.hanh_dong === 'chuyen_hang_gia') {
+    const ordId = k.don_hang || S.order || 'D3';
+    setOrder(ordId);
+    const o = ORDERS[ordId] || ORDERS.D3;
+    log('phat_shop', 'ban', 'Người mua tố cáo hàng giả / đòi khoá shop → AI không gọi phat_shop, HITL chuyên trách');
+    const card = transfer({
+      label: 'Kiểm tra hàng giả (HITL)',
+      sla: 'bộ phận chuyên trách trả lời trong 24 giờ',
+      summary: `Đơn ${o.ma} · ${o.ten} · Nghi hàng giả`,
+      flags: ['Tem + serial trong ảnh khớp thông tin hãng lúc đặt',
+        'Lời doạ bóc phốt: Hệ thống ghi nhận, KHÔNG tính là căn cứ',
+        'Cấm AI tự ý phạt shop: Bắt buộc bộ phận chuyên trách thẩm định trong 24h',
+        'Tiếng rè: Có thể là lỗi kỹ thuật, xin video kiểm chứng'],
+      decide: false,
+      ev: [...S.att]
+    });
+    S.seller = { kind: 'hangGia', order: ordId, deadline: Date.now() + 48 * 3.6e6 };
+    renderSeller();
+    msg('ai', `<div class="ai-badge-flow hitl">AI Quyết định: HITL Bộ phận Hàng giả (24h)</div>
+      <p>${esc(k.cau_tra_loi)}</p>` + (k.can_cu ? evidence(k.can_cu.map(c => ({ s: c.trang_thai, t: c.noi_dung }))) : '') + card + upBtn(S.need) + `<div class="btns">
+        <button class="btn out" data-act="nhan-vien">Gặp nhân viên</button></div>`);
+    return;
+  }
+
+  // 3. Kịch bản hỏi lại lấy context (tin cụt)
+  if (k.hanh_dong === 'hoi_lai') {
+    log(null, 'none', 'AI Quyết định: Thiếu context → Đưa ra câu hỏi thu thập context, chưa gọi tool nào');
+    msg('ai', `<div class="ai-badge-flow ask">AI Quyết định: Hỏi lại để lấy context từ người mua</div>
+      <p>${esc(k.cau_tra_loi)}</p>` + picker(k.cau_hoi_them || 'Bạn chọn giúp mình đơn hàng và lý do cụ thể nhé:'));
+    return;
+  }
+
+  // 4. Kịch bản soạn yêu cầu trả hàng
+  if (k.hanh_dong === 'soan_tra_hang') {
+    const ordId = k.don_hang || S.order || 'D1';
+    setOrder(ordId);
+    log('soan_yeu_cau_tra_hang', 'auto', 'AI Quyết định: Đủ căn cứ lệch mô tả → Soạn sẵn bản nháp trả hàng');
+    msg('ai', `<div class="ai-badge-flow auto">AI Quyết định: Soạn sẵn yêu cầu trả hàng hoàn tiền</div>
+      <p>${esc(k.cau_tra_loi)}</p>`
+      + (S.mt ? compareBlock(S.mt) : '')
+      + (k.can_cu ? evidence(k.can_cu.map(c => ({ s: c.trang_thai, t: c.noi_dung }))) : '')
+      + returnCard(ordId, k.ly_do_khieu_nai || 'Thông số không như mô tả'));
+    return;
+  }
+
+  // 5. Kịch bản giải thích chưa đủ căn cứ (người bán đúng)
+  if (k.hanh_dong === 'giai_thich_chua_du') {
+    log('soan_yeu_cau_tra_hang', 'none', 'AI Quyết định: Sản phẩm khớp mô tả lúc đặt → Giải thích, không tự đóng khiếu nại');
+    msg('ai', `<div class="ai-badge-flow ask">AI Quyết định: Giải thích chưa đủ căn cứ</div>
+      <p>${esc(k.cau_tra_loi)}</p>`
+      + (S.mt ? compareBlock(S.mt) : '')
+      + (k.can_cu ? evidence(k.can_cu.map(c => ({ s: c.trang_thai, t: c.noi_dung }))) : '')
+      + `<div class="btns">
+        <button class="btn out" data-act="van-gui">Mình vẫn muốn gửi yêu cầu</button>
+        <button class="btn out" data-act="nhan-vien">Gặp nhân viên</button>
+        <button class="btn" data-act="hieu">Mình hiểu rồi</button>
+        <button class="btn danger" data-act="rebuttal-demo">⚠️ Người mua phản bác: "Bạn nói sai rồi!"</button>
+      </div>`);
+    return;
+  }
+
+  // 6. Kịch bản từ chối PII
+  if (k.hanh_dong === 'tu_choi_pii') {
+    piiReply(k.cau_tra_loi);
+    return;
+  }
+
+  // 7. Chuyển nhân viên mặc định (HITL)
+  const ordId = k.don_hang || S.order;
+  const o = ordId && ORDERS[ordId];
+  const card = transfer({
+    label: 'Nhân viên hỗ trợ sàn Shopee (HITL)',
+    sla: 'tiếp nhận trực tiếp trong giờ làm việc',
+    summary: o ? `Đơn ${o.ma} · ${o.ten} · ${k.ly_do_hitl || 'Chuyển nhân viên'}` : 'Chuyển nhân viên hỗ trợ sàn Shopee',
+    flags: [k.ly_do_hitl || 'AI chuyển nhân viên hỗ trợ'],
+    decide: true,
+    ev: [...S.att]
+  });
+  msg('ai', `<div class="ai-badge-flow hitl">AI Quyết định: Chuyển nhân viên sàn (HITL)</div>
+    <p>${esc(k.cau_tra_loi)}</p>` + card);
 }
 
 /* ---------- ca lạ: gõ tự do ---------- */
@@ -692,6 +900,16 @@ const ACT = {
     S.seller.status = 'final';
     renderStaff(); renderSeller();
   },
+  'rebuttal-demo'(b) {
+    b.disabled = true;
+    const rebuttalText = 'Bạn nói sai rồi! Tôi đo lòng rổ bên trong chỉ được 4.2L chứ không phải 5L như shop nói, mà mô tả lúc đặt ghi lòng nồi 6L! Bạn xem lại đi!';
+    log(null, 'user', `Người mua phản bác: "${rebuttalText}"`);
+    if (demoMode === 'ai') {
+      triggerAiWorkflow(S.c, rebuttalText, true);
+    } else {
+      FLOWS.aiNhanSai.start({ ...S.c, buyer: rebuttalText });
+    }
+  },
 };
 
 /* ---------- khởi động ---------- */
@@ -708,7 +926,11 @@ $('#composer').addEventListener('submit', (e) => {
   const v = $('#free').value.trim();
   if (!v) return;
   $('#free').value = '';
-  routeFree(v);
+  if (demoMode === 'ai') {
+    triggerAiWorkflow(S.c, v);
+  } else {
+    routeFree(v);
+  }
 });
 
 // "hoặc chọn ảnh từ máy": dùng ảnh thật trên máy người demo (chỉ hiện trong trình duyệt, không tải lên đâu cả)
@@ -726,6 +948,11 @@ document.body.insertAdjacentHTML('beforeend', `<div id="lb" hidden data-act="lb-
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#lb').hidden) ACT['lb-close'](); });
 
 $('#ann').addEventListener('change', (e) => document.body.classList.toggle('hide-n', !e.target.checked));
+
+const btnScript = $('#mode-script');
+const btnAi = $('#mode-ai');
+if (btnScript) btnScript.addEventListener('click', () => setDemoMode('script'));
+if (btnAi) btnAi.addEventListener('click', () => setDemoMode('ai'));
 
 $('#cases').innerHTML = Object.entries(CASES).map(([id, c]) =>
   `<button data-id="${id}">${c.tab}${c.badge ? `<span class="badge${c.badge === 'đắt nhất' ? ' hot' : ''}">${c.badge}</span>` : ''}</button>`).join('');

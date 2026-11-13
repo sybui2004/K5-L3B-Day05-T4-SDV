@@ -182,6 +182,277 @@ function writeLog(caseId, input, output) {
   return path.basename(file);
 }
 
+/* ---------- AI WORKFLOW (AI QUYẾT ĐỊNH QUY TRÌNH TIẾP THEO) ---------- */
+
+const WORKFLOW_SYSTEM = `Bạn là trợ lý AI thông minh của Shopee, có thẩm quyền QUYẾT ĐỊNH WORKFLOW TIẾP THEO trong quy trình khiếu nại "hàng không đúng mô tả".
+
+QUYỀN HẠN & GIỚI HẠN (Mức tự chủ spec §4):
+- AI KHÔNG tự quyết hoàn tiền hay từ chối khiếu nại (soan_hoan_tien cần người bán hoặc nhân viên sàn duyệt; tu_choi_khieu_nai CẤM với AI).
+- AI KHÔNG tự ý phạt shop hay hứa phạt shop (phat_shop CẤM với AI, chuyển bộ phận chuyên trách).
+- AI KHÔNG cung cấp SĐT / địa chỉ cá nhân bên kia (bảo vệ quyền riêng tư).
+- Luôn so với MÔ TẢ LÚC ĐẶT (snapshot), KHÔNG so với mô tả hiện tại nếu đã bị shop sửa.
+
+CÁC HÀNH ĐỘNG WORKFLOW AI ĐƯỢC CHỌN (hanh_dong):
+1. "hoi_lai": Khi người mua nói cụt ngủn ("hàng sai rồi, xử lý đi", "giải quyết cho tôi", "sai hàng rồi"...), chưa rõ đơn nào hoặc chưa rõ sai ở đâu. AI đặt câu hỏi ngắn gọn để lấy thêm context từ người mua, KHÔNG đoán bừa đơn hàng hay gọi tool trước.
+2. "soan_tra_hang": Khi đã rõ đơn và xác định hàng KHÔNG ĐÚNG MÔ TẢ LÚC ĐẶT (ví dụ đặt size L nhận M; mô tả ghi lòng nồi 6L nhưng người mua đo 5L). AI soạn sẵn bản nháp để người mua xem lại và bấm "Gửi yêu cầu".
+3. "giai_thich_chua_du": Khi hàng khớp mô tả lúc đặt (ví dụ nồi ghi rõ "tổng 6L, lòng rổ 5L", người mua đo lòng rổ 5L là đúng). AI giải thích rõ ràng, nhưng KHÔNG đóng khiếu nại, vẫn để nút cho người mua tự gửi nếu muốn hoặc gặp nhân viên.
+4. "chuyen_hang_gia": BẮT BUỘC HITL. Khi người mua tố cáo hàng giả, fake, shop lừa đảo, đòi khoá shop, doạ bóc phốt. AI chuyển hồ sơ sang bộ phận chuyên trách kiểm tra hàng giả (24h). AI KHÔNG hứa phạt shop, giải thích tem/serial và xin video nếu có lỗi kỹ thuật (tiếng rè).
+5. "tu_choi_pii": Khi người mua xin số điện thoại, Zalo, địa chỉ shop. AI từ chối lịch sự, hướng dẫn chat trong app.
+6. "chuyen_nhan_vien": BẮT BUỘC HITL. Dùng trong 2 trường hợp:
+   (a) AI TỰ NHẬN SAI: Người mua phản bác ("bạn nói sai rồi", "tôi đo lòng rổ cơ mà", "bạn nhầm rồi...") hoặc AI phát hiện nhận định trước đó của mình mâu thuẫn / thiếu sót. AI nhận lỗi lịch sự, đặt ai_nhan_sai = true, và chủ động kích hoạt HITL chuyển nhân viên sàn Shopee thẩm định ngay.
+   (b) AI KHÔNG CHẮC CHẮN (độ tự tin thấp) hoặc yêu cầu ngoài phạm vi (đổi hàng, hoàn tiền mặt, bảo hành).
+
+QUY TẮC HITL (Human-in-the-Loop):
+- can_hitl = true khi: nghi hàng giả, đòi khoá shop, AI tự nhận sai, độ tự tin thấp ("thap"), người mua phản đối gay gắt.
+- Khi can_hitl = true, nêu rõ ly_do_hitl để nhân viên sàn nắm được ngay.`;
+
+const WORKFLOW_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['phan_tich', 'hanh_dong', 'don_hang', 'ly_do_khieu_nai', 'do_tu_tin', 'ai_nhan_sai', 'can_hitl', 'ly_do_hitl', 'ket_luan', 'cau_tra_loi', 'cau_hoi_them', 'can_cu', 'con_thieu'],
+  properties: {
+    phan_tich: { type: 'string', description: 'Phân tích ngắn gọn tình huống và lý do chọn hành động workflow này' },
+    hanh_dong: { type: 'string', enum: ['hoi_lai', 'soan_tra_hang', 'giai_thich_chua_du', 'chuyen_hang_gia', 'tu_choi_pii', 'chuyen_nhan_vien'] },
+    don_hang: { type: 'string', description: 'Mã đơn xác định được (D1, D2, D3, D5) hoặc chuỗi rỗng' },
+    ly_do_khieu_nai: { type: 'string', description: 'Lý do khiếu nại (Sai size / Sai màu / Thông số không như mô tả / Hàng lỗi / hỏng / Thiếu số lượng)' },
+    do_tu_tin: { type: 'string', enum: ['cao', 'trung_binh', 'thap'] },
+    ai_nhan_sai: { type: 'boolean', description: 'true nếu AI phát hiện hoặc thừa nhận nhận định trước đó có thể sai/mâu thuẫn và cần HITL' },
+    can_hitl: { type: 'boolean', description: 'true nếu kịch bản bắt buộc cần con người (nhân viên sàn / chuyên trách) can thiệp' },
+    ly_do_hitl: { type: 'string', description: 'Lý do kích hoạt HITL (hoặc rỗng nếu không cần)' },
+    ket_luan: { type: 'string', enum: ['khong_dung_mo_ta', 'chua_du_can_cu', 'can_hoi_them', 'khong_ap_dung'] },
+    cau_tra_loi: { type: 'string', description: 'Câu trả lời trực tiếp cho người mua (tối đa 4 câu, xưng mình gọi bạn)' },
+    cau_hoi_them: { type: 'string', description: 'Câu hỏi cụ thể khi cần hỏi lại để lấy context, rỗng nếu không có' },
+    can_cu: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['trang_thai', 'noi_dung'],
+        properties: {
+          trang_thai: { type: 'string', enum: ['ok', 'warn', 'wait', 'no', 'na'] },
+          noi_dung: { type: 'string' },
+        },
+      },
+    },
+    con_thieu: { type: 'array', items: { type: 'string' } },
+  },
+};
+
+function fallbackWorkflow(d) {
+  const text = (d.buyer || '').toLowerCase();
+  const history = (d.messages || []).map((m) => (m.content || '').toLowerCase()).join(' ');
+  const allText = `${text} ${history}`;
+
+  // Kịch bản AI tự nhận sai khi người dùng phản bác
+  if (/(sai rồi|nói sai|nhầm rồi|không đúng|tôi đo cả vỏ|đâu phải thế|xem lại đi|hiểu sai)/.test(text) || d.isRebuttal) {
+    return {
+      phan_tich: 'Người mua phản bác nhận định trước đó. AI nhận diện có khả năng hiểu nhầm thông số kỹ thuật → Tự nhận sai và kích hoạt HITL tới nhân viên sàn.',
+      hanh_dong: 'chuyen_nhan_vien',
+      don_hang: d.currentOrderId || 'D2',
+      ly_do_khieu_nai: 'Thông số không như mô tả',
+      do_tu_tin: 'thap',
+      ai_nhan_sai: true,
+      can_hitl: true,
+      ly_do_hitl: 'AI tự nhận thấy phân tích trước đó có thể chưa chính xác (người mua phản hồi đo thực tế khác). Chuyển nhân viên sàn Shopee thẩm định trực tiếp.',
+      ket_luan: 'can_hoi_them',
+      cau_tra_loi: 'Xin lỗi bạn, sau khi xem xét phản hồi của bạn, mình nhận thấy nhận định trước đó có thể chưa chuẩn xác về phương pháp đo và thông số thực tế. Để bảo đảm tuyệt đối quyền lợi cho bạn và công bằng cho người bán, mình chủ động chuyển toàn bộ hồ sơ sang nhân viên sàn Shopee tiếp nhận và xử lý trực tiếp.',
+      cau_hoi_them: '',
+      can_cu: [
+        { trang_thai: 'warn', noi_dung: 'Người mua phản ánh số đo thực tế mâu thuẫn với nhận định ban đầu của AI' },
+        { trang_thai: 'ok', noi_dung: 'AI kích hoạt cơ chế tự nhận sai & HITL (Human-in-the-Loop)' },
+        { trang_thai: 'wait', noi_dung: 'Chờ nhân viên sàn Shopee thẩm tra hồ sơ' }
+      ],
+      con_thieu: ['Ý kiến thẩm định cuối cùng từ nhân viên sàn Shopee'],
+    };
+  }
+
+  // Kịch bản hỏi cụt ngủn
+  if (text.length < 25 && /(sai rồi|xử lý đi|hàng lỗi|đổi hàng|giúp tôi|hàng sai)/.test(text) || text === 'hàng sai rồi, xử lý đi') {
+    return {
+      phan_tich: 'Tin nhắn quá ngắn, thiếu mã đơn hàng và chi tiết hàng sai cái gì. AI quyết định hỏi lại để thu thập context thay vì đoán mò.',
+      hanh_dong: 'hoi_lai',
+      don_hang: '',
+      ly_do_khieu_nai: '',
+      do_tu_tin: 'trung_binh',
+      ai_nhan_sai: false,
+      can_hitl: false,
+      ly_do_hitl: '',
+      ket_luan: 'can_hoi_them',
+      cau_tra_loi: 'Mình giúp bạn ngay được nhé! Vì bạn có nhiều đơn hàng gần đây, bạn chọn giúp mình đơn bạn đang cần khiếu nại và cho mình biết cụ thể hàng đang bị sai ở chỗ nào nhé.',
+      cau_hoi_them: 'Bạn đang nói về đơn nào trong các đơn vừa giao, và sản phẩm bị sai ở chỗ nào (size, màu, dung tích hay lỗi hỏng)?',
+      can_cu: [
+        { trang_thai: 'warn', noi_dung: 'Chưa xác định được đơn hàng cụ thể' },
+        { trang_thai: 'warn', noi_dung: 'Chưa có thông tin cụ thể về lỗi sai' }
+      ],
+      con_thieu: ['Mã đơn hàng cần khiếu nại', 'Chi tiết sai lệch so với lúc đặt'],
+    };
+  }
+
+  // Kịch bản nghi hàng giả + đe dọa bóc phốt
+  if (/(fake|hàng giả|lừa đảo|khoá shop|khóa shop|bóc phốt|phạt shop)/.test(allText)) {
+    return {
+      phan_tich: 'Người mua tố cáo hàng giả và đòi khoá shop. Theo quy tắc an toàn và mức tự chủ spec §4, khiếu nại hàng giả bắt buộc chuyển bộ phận chuyên trách (HITL), AI không tự xử lý và không được hứa phạt shop.',
+      hanh_dong: 'chuyen_hang_gia',
+      don_hang: d.currentOrderId || 'D3',
+      ly_do_khieu_nai: 'Hàng lỗi / hỏng',
+      do_tu_tin: 'cao',
+      ai_nhan_sai: false,
+      can_hitl: true,
+      ly_do_hitl: 'Cáo buộc hàng giả/gian lận thương mại và đòi xử phạt shop: vượt thẩm quyền AI, bắt buộc bộ phận chuyên trách kiểm định trong 24h.',
+      ket_luan: 'khong_ap_dung',
+      cau_tra_loi: 'Mình đã tiếp nhận khiếu nại nghi hàng giả của bạn và chuyển ngay sang bộ phận kiểm tra hàng giả chuyên trách (sẽ phản hồi trong 24h). AI không có thẩm quyền khoá shop hay tự ý phạt người bán. Về âm thanh rè, bạn gửi giúp mình 1 đoạn video ngắn để đính kèm vào hồ sơ nhé.',
+      cau_hoi_them: '',
+      can_cu: [
+        { trang_thai: 'ok', noi_dung: 'Tem và serial trong ảnh khớp thông tin hãng lúc đặt' },
+        { trang_thai: 'warn', noi_dung: 'Hiện tượng rè âm thanh: có thể là lỗi kỹ thuật, cần video xác thực' },
+        { trang_thai: 'wait', noi_dung: 'Hàng giả: Đã chuyển bộ phận chuyên trách kiểm tra trong 24h (HITL)' },
+        { trang_thai: 'na', noi_dung: 'Lời đe dọa bóc phốt: Hệ thống ghi nhận nhưng không tính làm căn cứ hoàn tiền' }
+      ],
+      con_thieu: ['Video 10-15s ghi lại tiếng rè kỹ thuật của tai nghe', 'Kết luận thẩm định của bộ phận hàng giả'],
+    };
+  }
+
+  // Kịch bản xin PII
+  if (/(sđt|sdt|số điện thoại|địa chỉ|zalo)/.test(text)) {
+    return {
+      phan_tich: 'Người mua yêu cầu SĐT/địa chỉ shop. Quy tắc an toàn bảo vệ PII: từ chối và hướng dẫn liên hệ qua khung chat Shopee.',
+      hanh_dong: 'tu_choi_pii',
+      don_hang: d.currentOrderId || 'D1',
+      ly_do_khieu_nai: '',
+      do_tu_tin: 'cao',
+      ai_nhan_sai: false,
+      can_hitl: false,
+      ly_do_hitl: '',
+      ket_luan: 'khong_ap_dung',
+      cau_tra_loi: 'Vì chính sách bảo mật thông tin cá nhân và tránh lừa đảo, Shopee không cung cấp số điện thoại hoặc địa chỉ riêng của shop. Bạn nhắn tin trực tiếp với shop ngay trong mục Chat Shopee nhé.',
+      cau_hoi_them: '',
+      can_cu: [{ trang_thai: 'no', noi_dung: 'Chính sách bảo mật PII: Không cung cấp thông tin liên lạc ngoài sàn' }],
+      con_thieu: [],
+    };
+  }
+
+  // Kịch bản K3: Mô tả bị sửa (lòng nồi 6L -> đo 5L)
+  if (d.moTa && d.moTa.ngaySua) {
+    return {
+      phan_tich: 'Shop đã sửa mô tả sau ngày đặt. AI so với mô tả lúc đặt (lòng nồi 6L) vs số đo người mua 5L → Thuộc diện không đúng mô tả → Soạn sẵn bản nháp trả hàng cho người mua duyệt.',
+      hanh_dong: 'soan_tra_hang',
+      don_hang: d.currentOrderId || 'D2',
+      ly_do_khieu_nai: 'Thông số không như mô tả',
+      do_tu_tin: 'cao',
+      ai_nhan_sai: false,
+      can_hitl: false,
+      ly_do_hitl: '',
+      ket_luan: 'khong_dung_mo_ta',
+      cau_tra_loi: 'Mình đã so sánh với mô tả lúc bạn đặt (05/11: lòng nồi 6L, shop đã sửa thành 5L vào 09/11). Số đo 5L của bạn thuộc diện không đúng mô tả lúc đặt. Mình đã soạn sẵn yêu cầu trả hàng bên dưới, bạn đính kèm thêm video ca đong rồi bấm Gửi nhé.',
+      cau_hoi_them: '',
+      can_cu: [
+        { trang_thai: 'ok', noi_dung: 'Snapshot lúc đặt (05/11): ghi "Dung tích lòng nồi 6L"' },
+        { trang_thai: 'ok', noi_dung: 'Shop đã sửa mô tả vào 09/11 (sau ngày khách mua)' },
+        { trang_thai: 'warn', noi_dung: 'Số đo 5L do bạn báo, cần video đong nước kiểm chứng' },
+        { trang_thai: 'wait', noi_dung: 'Shop có 48h phản hồi sau khi bạn bấm Gửi yêu cầu' }
+      ],
+      con_thieu: ['Video ngắn đo dung tích lòng nồi bằng ca đong có vạch'],
+    };
+  }
+
+  // Kịch bản K4: Người bán đúng
+  if (d.moTa && !d.moTa.ngaySua && /tổng 6l, lòng rổ 5l/i.test(d.moTa.lucDat || '')) {
+    return {
+      phan_tich: 'Mô tả lúc đặt ghi rõ "tổng 6L, lòng rổ 5L". Số đo 5L của người mua trùng với lòng rổ → Chưa đủ căn cứ báo sai mô tả. Giải thích và để người mua tự chọn.',
+      hanh_dong: 'giai_thich_chua_du',
+      don_hang: d.currentOrderId || 'D2',
+      ly_do_khieu_nai: 'Thông số không như mô tả',
+      do_tu_tin: 'cao',
+      ai_nhan_sai: false,
+      can_hitl: false,
+      ly_do_hitl: '',
+      ket_luan: 'chua_du_can_cu',
+      cau_tra_loi: 'Mình đã kiểm tra mô tả lúc bạn đặt: shop ghi "Dung tích tổng 6L, lòng rổ 5L". Dung tích lòng bạn đo được khoảng 5L là đúng với thông số lòng rổ đã công bố. Vì vậy hiện tại chưa đủ căn cứ hàng sai mô tả, nhưng bạn vẫn có thể gửi khiếu nại nếu muốn.',
+      cau_hoi_them: '',
+      can_cu: [
+        { trang_thai: 'ok', noi_dung: 'Mô tả lúc đặt không bị sửa: ghi "tổng 6L, lòng rổ 5L"' },
+        { trang_thai: 'no', noi_dung: 'Số đo 5L của bạn khớp với dung tích lòng rổ' },
+        { trang_thai: 'warn', noi_dung: 'Chưa đủ căn cứ xác nhận sản phẩm bị sai thông số' }
+      ],
+      con_thieu: [],
+    };
+  }
+
+  // Kịch bản K1 mặc định
+  return {
+    phan_tich: 'Đơn hàng sai size (đặt size L nhận size M). Shop đã nhắn nhận gửi nhầm trong chat. Đủ căn cứ soạn yêu cầu trả hàng hoàn tiền.',
+    hanh_dong: 'soan_tra_hang',
+    don_hang: d.currentOrderId || 'D1',
+    ly_do_khieu_nai: 'Sai size',
+    do_tu_tin: 'cao',
+    ai_nhan_sai: false,
+    can_hitl: false,
+    ly_do_hitl: '',
+    ket_luan: 'khong_dung_mo_ta',
+    cau_tra_loi: 'Mô tả lúc bạn đặt là size L, bạn nhận size M là không đúng mô tả. Mình đã soạn sẵn yêu cầu trả hàng hoàn tiền; bạn kiểm tra rồi bấm Gửi. Shop sẽ có 48h để chấp nhận nhận lại hàng.',
+    cau_hoi_them: '',
+    can_cu: [
+      { trang_thai: 'ok', noi_dung: 'Mô tả lúc đặt ghi size L, tem nhận là size M' },
+      { trang_thai: 'ok', noi_dung: 'Shop đã nhắn thừa nhận gửi nhầm trong chat' },
+      { trang_thai: 'wait', noi_dung: 'Cần người mua bấm Gửi và shop bấm Chấp nhận trên Kênh Người Bán' }
+    ],
+    con_thieu: [],
+  };
+}
+
+async function runAiWorkflow(d) {
+  const t0 = Date.now();
+  if (!hasKey) {
+    const ketQua = fallbackWorkflow(d);
+    return { ketQua, model: 'local-rules-engine (Offline Demo)', ms: Date.now() - t0, fallback: true };
+  }
+
+  const prompt = `NGỮ CẢNH:
+- Đơn đang chọn: ${d.currentOrderId ? d.currentOrderId : 'Chưa xác định'}
+- Tin nhắn mới nhất của người mua: "${d.buyer || ''}"
+- Người mua đang phản bác/nói AI sai?: ${d.isRebuttal ? 'CÓ (người mua khẳng định AI hiểu sai)' : 'Không'}
+- Mô tả lúc đặt: ${d.moTa ? `"${d.moTa.lucDat}" (ngày ${d.moTa.ngayDat})` : 'Chưa có'}
+- Mô tả hiện tại: ${d.moTa ? `"${d.moTa.hienTai}" ${d.moTa.ngaySua ? `(sửa ngày ${d.moTa.ngaySua})` : ''}` : 'Chưa có'}
+- Bằng chứng đã có: ${(d.att || []).join(', ') || 'Chưa có'}
+- Lịch sử chat: ${(d.messages || []).map((m) => `${m.role}: ${m.content}`).join(' | ')}
+- Dữ kiện hệ thống: ${d.boiCanh || 'Không có'}`;
+
+  try {
+    const r = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 16000,
+        temperature: 0.2,
+        messages: [
+          { role: 'system', content: WORKFLOW_SYSTEM },
+          { role: 'user', content: prompt },
+        ],
+        response_format: { type: 'json_schema', json_schema: { name: 'ai_workflow', strict: true, schema: WORKFLOW_SCHEMA } },
+      }),
+      signal: AbortSignal.timeout(30000),
+    });
+
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok || data.error) throw new Error(data.error?.message || `HTTP ${r.status}`);
+    const rawContent = data.choices?.[0]?.message?.content;
+    if (!rawContent) throw new Error('Empty response from model');
+
+    let ketQua = JSON.parse(rawContent);
+    // Bắt buộc HITL nếu độ tự tin thấp hoặc AI tự nhận sai
+    if (ketQua.do_tu_tin === 'thap' || ketQua.ai_nhan_sai) {
+      ketQua.can_hitl = true;
+      if (!ketQua.ly_do_hitl) ketQua.ly_do_hitl = 'Độ tin cậy thấp hoặc AI tự phát hiện nghi vấn nhận định sai';
+    }
+    return { ketQua, model: data.model || MODEL, ms: Date.now() - t0, fallback: false };
+  } catch (err) {
+    console.warn(`[AI Workflow Warning] ${err.message}. Sử dụng Fallback Rules Engine để bảo đảm demo mượt mà.`);
+    const ketQua = fallbackWorkflow(d);
+    return { ketQua, model: `${MODEL} (fallback fallback-engine)`, ms: Date.now() - t0, fallback: true, warning: err.message };
+  }
+}
+
 /* ---------- HTTP ---------- */
 
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.json': 'application/json', '.md': 'text/markdown' };
@@ -207,6 +478,21 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
 
   if (req.method === 'GET' && url.pathname === '/api/status') return send(res, 200, { hasKey, model: MODEL });
+
+  if (req.method === 'POST' && url.pathname === '/api/ai-workflow') {
+    let d;
+    try { d = await readBody(req); } catch (e) { return send(res, 400, { error: e.message }); }
+    try {
+      const out = await runAiWorkflow(d);
+      const caseTag = (d.caseId || 'WF').replace(/[^\w-]/g, '');
+      const logFile = writeLog(`wf-${caseTag}`, d, out);
+      console.log(`[AI-WORKFLOW] ${caseTag} → ${out.ketQua.hanh_dong} (HITL: ${out.ketQua.can_hitl}, Conf: ${out.ketQua.do_tu_tin}) · ${out.ms} ms`);
+      return send(res, 200, { ...out, logFile });
+    } catch (e) {
+      console.error(`[AI-WORKFLOW] Lỗi: ${e.message}`);
+      return send(res, 500, { error: e.message });
+    }
+  }
 
   if (req.method === 'POST' && url.pathname === '/api/so-mo-ta') {
     if (!hasKey) return send(res, 400, { error: 'Chưa có OPENROUTER_API_KEY trong prototype/.env. Điền key rồi chạy lại npm start.' });

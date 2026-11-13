@@ -1,0 +1,39 @@
+{
+  "thoi_gian": "2026-11-13T04:49:12.302Z",
+  "ca": "wf-K2",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K2",
+    "buyer": "hàng sai rồi, xử lý đi",
+    "moTa": null,
+    "boiCanh": "",
+    "att": [],
+    "isRebuttal": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "hàng sai rồi, xử lý đi"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua chỉ nói 'hàng sai rồi, xử lý đi' - rất cụt ngủn, chưa rõ đơn hàng nào, sai ở điểm nào. Chưa có thông tin về mô tả lúc đặt hay bằng chứng. Cần hỏi lại để lấy context.",
+    "hanh_dong": "hoi_lai",
+    "don_hang": "Chưa xác định",
+    "ly_do_khieu_nai": "Chưa rõ",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": false,
+    "can_hitl": true,
+    "ly_do_hitl": "Độ tin cậy thấp hoặc AI tự phát hiện nghi vấn nhận định sai",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Chào bạn, mình rất tiếc vì sự cố này. Bạn có thể cho mình biết thêm chi tiết được không ạ? Cụ thể là đơn hàng nào (mã đơn) và hàng sai ở điểm nào so với mô tả lúc đặt (ví dụ: sai màu, sai kích thước, sai chất liệu...)? Mình sẽ kiểm tra và hỗ trợ bạn ngay.",
+    "cau_hoi_them": "Bạn vui lòng cung cấp mã đơn hàng và mô tả cụ thể lỗi sai (ví dụ: sai màu, sai size, sai chất liệu...) để mình kiểm tra nhé.",
+    "can_cu": [],
+    "con_thieu": [
+      "Mã đơn hàng",
+      "Chi tiết lỗi sai",
+      "Mô tả lúc đặt"
+    ]
+  },
+  "ms": 5669
+}

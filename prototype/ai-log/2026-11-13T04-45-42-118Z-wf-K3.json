@@ -1,0 +1,45 @@
+{
+  "thoi_gian": "2026-11-13T04:45:42.119Z",
+  "ca": "wf-K3",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K3",
+    "buyer": "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
+    "currentOrderId": "D2",
+    "moTa": {
+      "lucDat": "Dung tích <mark>lòng nồi 6L</mark>, công suất 1700W",
+      "hienTai": "Dung tích <mark>tổng 6L, lòng rổ 5L</mark>, công suất 1700W",
+      "ngayDat": "05/11",
+      "ngaySua": "09/11"
+    },
+    "boiCanh": "Giao 08/11. Người mua đã đính kèm 1 ảnh lòng nồi (không thấy vạch đo). Chưa có video đo bằng ca đong. Người mua chưa gửi yêu cầu trả hàng nên shop chưa phản hồi.",
+    "att": [
+      "d2-long-noi"
+    ],
+    "isRebuttal": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả."
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua khẳng định nồi chiên ghi 6 lít nhưng đo lòng nồi chỉ 5 lít. Mô tả lúc đặt (05/11) ghi 'Dung tích lòng nồi 6L', nhưng mô tả hiện tại (sửa 09/11) ghi 'tổng 6L, lòng rổ 5L'. Điều này cho thấy mô tả lúc đặt có thể gây hiểu lầm (lòng nồi 6L nhưng thực tế lòng rổ 5L). Người mua đã phản bác AI hiểu sai (CÓ). AI cần nhận sai và chuyển nhân viên sàn thẩm định vì mâu thuẫn giữa mô tả lúc đặt và thực tế.",
+    "hanh_dong": "chuyen_nhan_vien",
+    "don_hang": "D2",
+    "ly_do_khieu_nai": "Hàng không đúng mô tả lúc đặt: mô tả ghi 'lòng nồi 6L' nhưng người mua đo lòng nồi chỉ 5L. Mô tả hiện tại đã sửa thành 'tổng 6L, lòng rổ 5L' (ngày 09/11), cho thấy có sự thay đổi.",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": true,
+    "can_hitl": true,
+    "ly_do_hitl": "AI nhận sai do mô tả lúc đặt mâu thuẫn với thực tế; người mua phản bác; cần nhân viên sàn thẩm định bằng chứng (ảnh lòng nồi) và đối chiếu mô tả snapshot.",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Cảm ơn bạn đã cung cấp thông tin. Tôi nhận thấy mô tả lúc đặt (05/11) ghi 'lòng nồi 6L', nhưng mô tả hiện tại (sửa 09/11) ghi 'tổng 6L, lòng rổ 5L'. Điều này có thể gây hiểu lầm. Tôi đã nhận sai và chuyển khiếu nại của bạn đến nhân viên sàn Shopee để thẩm định chi tiết. Họ sẽ xem xét ảnh bạn đã gửi và đối chiếu với mô tả gốc. Bạn vui lòng chờ trong 24h để được hỗ trợ tốt nhất.",
+    "cau_hoi_them": "",
+    "can_cu": [],
+    "con_thieu": [
+      "video đo bằng ca đong để xác nhận dung tích thực tế"
+    ]
+  },
+  "ms": 8089
+}

@@ -1,0 +1,36 @@
+{
+  "thoi_gian": "2026-11-13T04:42:43.808Z",
+  "ca": "wf-K2",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K2",
+    "buyer": "hàng sai rồi, xử lý đi",
+    "currentOrderId": "",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hàng sai rồi, xử lý đi"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua nói 'hàng sai rồi, xử lý đi' - câu nói cụt ngủn, chưa rõ đơn hàng nào, sai ở điểm nào. Chưa có thông tin về đơn hàng, mô tả, bằng chứng. Cần hỏi lại để lấy thêm context.",
+    "hanh_dong": "hoi_lai",
+    "don_hang": "Chưa xác định",
+    "ly_do_khieu_nai": "Chưa rõ",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": false,
+    "can_hitl": true,
+    "ly_do_hitl": "Độ tin cậy thấp hoặc AI tự phát hiện nghi vấn nhận định sai",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Chào bạn, mình rất tiếc vì trải nghiệm không như mong đợi. Để mình hỗ trợ bạn kiểm tra, bạn vui lòng cho mình biết:\n- Đơn hàng nào bị sai?\n- Sản phẩm sai ở điểm nào so với mô tả lúc đặt (ví dụ: sai màu, sai size, sai chất liệu, thiếu phụ kiện...)?\n- Bạn có thể cung cấp ảnh/video chụp sản phẩm thực tế và phần mô tả trên app để mình đối chiếu giúp bạn nhé.",
+    "cau_hoi_them": "Bạn vui lòng cho mình mã đơn hàng hoặc tên sản phẩm để tra cứu nhanh hơn ạ?",
+    "can_cu": [],
+    "con_thieu": [
+      "Mã đơn hàng",
+      "Chi tiết sai lệch",
+      "Bằng chứng (ảnh/video)"
+    ]
+  },
+  "ms": 7273
+}
