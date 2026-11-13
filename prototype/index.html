@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prototype T4 · Khiếu nại không đúng mô tả</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Trò chuyện với Shopee: trợ lý khiếu nại "không đúng mô tả"</h1>
+  <p class="sub">Prototype thiết kế · dữ liệu dựng · hôm nay 12/11/2026. Cùng một trợ lý AI: người mua và người bán thấy gì khi AI không chắc, và <b>ai quyết</b>. AI không có nút hoàn tiền, từ chối hay phạt shop.</p>
+  <nav id="cases" aria-label="Chọn ca"></nav>
+  <label class="annt"><input type="checkbox" id="ann" checked> Hiện số chú thích ①–⑧ (HAX/PAIR)</label>
+</header>
+
+<main>
+  <section class="col">
+    <div class="colhead">Người mua · app Shopee</div>
+    <div class="phone">
+      <div class="bar">
+        <span>‹ Trò chuyện với Shopee</span>
+        <span class="tag-ai"><span class="n">1</span>Trợ lý AI</span>
+      </div>
+      <div id="order" class="order"></div>
+      <div id="chat" class="chat"></div>
+      <form id="composer" autocomplete="off">
+        <input id="free" placeholder="Nhập tin nhắn (thử một ca lạ)…">
+        <button class="btn pri" type="submit">Gửi</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="col">
+    <div class="colhead">Người bán · Kênh Người Bán</div>
+    <div id="seller" class="panel"></div>
+    <div class="colhead">Nhân viên sàn · hàng chờ</div>
+    <div id="staff" class="panel"></div>
+  </section>
+
+  <aside class="col">
+    <div class="colhead">Mức tự chủ của từng tool (spec §4)</div>
+    <div id="tools" class="panel"></div>
+    <div class="colhead">Nhật ký hệ thống: tool nào được gọi, ai bấm</div>
+    <div id="log" class="panel log"></div>
+  </aside>
+</main>
+
+<footer>Dữ liệu, shop, người dùng và chính sách (hạn trả hàng 15 ngày, người bán phản hồi trong 48h) đều là dựng để học. Không liên kết với Shopee.</footer>
+
+<script src="cases.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
