@@ -1,0 +1,46 @@
+{
+  "thoi_gian": "2026-11-13T04:43:30.295Z",
+  "ca": "wf-K3",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K3",
+    "buyer": "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
+    "currentOrderId": "D2",
+    "moTa": {
+      "lucDat": "Dung tích <mark>lòng nồi 6L</mark>, công suất 1700W",
+      "hienTai": "Dung tích <mark>tổng 6L, lòng rổ 5L</mark>, công suất 1700W",
+      "ngayDat": "05/11",
+      "ngaySua": "09/11"
+    },
+    "boiCanh": "Giao 08/11. Người mua đã đính kèm 1 ảnh lòng nồi (không thấy vạch đo). Chưa có video đo bằng ca đong. Người mua chưa gửi yêu cầu trả hàng nên shop chưa phản hồi.",
+    "att": [
+      "d2-long-noi"
+    ],
+    "isRebuttal": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả."
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua phản bác rằng AI hiểu sai, khẳng định 'mình đo lòng nồi chỉ được 5 lít' trong khi mô tả lúc đặt ghi 'lòng nồi 6L'. Đây là trường hợp AI TỰ NHẬN SAI (người mua phản bác trực tiếp) và cũng có độ tự tin thấp vì bằng chứng chưa đủ (ảnh không có vạch đo, chưa có video đo ca đong). Cần chuyển nhân viên sàn thẩm định ngay.",
+    "hanh_dong": "chuyen_nhan_vien",
+    "don_hang": "D2",
+    "ly_do_khieu_nai": "hàng không đúng mô tả",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": true,
+    "can_hitl": true,
+    "ly_do_hitl": "Người mua phản bác AI hiểu sai (khẳng định đo lòng nồi 5L trong khi mô tả lúc đặt ghi 6L). Bằng chứng chưa đủ (ảnh không vạch đo, chưa video đo ca đong). Cần nhân viên sàn thẩm định và đối chiếu mô tả snapshot ngày 05/11.",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Cảm ơn bạn đã phản hồi. Tôi nhận thấy mình đã hiểu chưa đúng về thông tin mô tả lúc đặt (ghi 'lòng nồi 6L' ngày 05/11) so với bằng chứng bạn đưa ra. Để đảm bảo chính xác, tôi sẽ chuyển ngay yêu cầu của bạn đến nhân viên sàn Shopee thẩm định. Họ sẽ xem xét ảnh bạn đã gửi và đối chiếu với mô tả gốc để giải quyết. Bạn vui lòng chờ trong 24h tới nhé. Xin lỗi vì sự bất tiện này.",
+    "cau_hoi_them": "",
+    "can_cu": [],
+    "con_thieu": [
+      "video đo dung tích bằng ca đong",
+      "ảnh rõ vạch đo lòng nồi"
+    ]
+  },
+  "ms": 8724
+}

@@ -1,0 +1,62 @@
+{
+  "thoi_gian": "2026-11-13T03:19:30.086Z",
+  "ca": "K4",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "tenDon": "Nồi chiên không dầu 6L",
+    "buyer": "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
+    "lucDat": "Dung tích tổng 6L, lòng rổ 5L, công suất 1700W",
+    "hienTai": "Dung tích tổng 6L, lòng rổ 5L, công suất 1700W",
+    "ngayDat": "05/11",
+    "ngaySua": null,
+    "boiCanh": "Giao 08/11. Người mua đã đính kèm 1 ảnh lòng nồi (không thấy vạch đo). Chưa có video đo. Người mua chưa gửi yêu cầu trả hàng nên shop chưa phản hồi."
+  },
+  "ket_qua": {
+    "mo_ta_luc_dat_ghi": "Dung tích tổng 6L, lòng rổ 5L, công suất 1700W",
+    "nguoi_mua_nhan": "Người mua đo lòng nồi được 5L",
+    "lech": "khong",
+    "can_cu": [
+      {
+        "trang_thai": "warn",
+        "noi_dung": "Người mua đã đính kèm 1 ảnh lòng nồi nhưng không thấy vạch đo, chưa đủ để xác nhận dung tích thực tế."
+      },
+      {
+        "trang_thai": "no",
+        "noi_dung": "Mô tả lúc đặt ghi rõ 'lòng rổ 5L', và người mua đo lòng nồi được 5L, trùng khớp với con số trong mô tả."
+      },
+      {
+        "trang_thai": "na",
+        "noi_dung": "Mô tả không bị sửa sau khi bán."
+      }
+    ],
+    "ket_luan": "chua_du_can_cu",
+    "con_thieu": [
+      "Video đo dung tích lòng nồi có vạch đo rõ ràng."
+    ],
+    "cau_tra_loi": "Mình đã so với mô tả lúc đặt ngày 05/11, mô tả ghi rõ 'lòng rổ 5L' và bạn đo lòng nồi được 5L, như vậy là trùng khớp. Nếu bạn vẫn thấy hàng không đúng, bạn có thể bấm 'Mình vẫn muốn gửi yêu cầu' hoặc 'Gặp nhân viên' để được hỗ trợ thêm."
+  },
+  "usage": {
+    "prompt_tokens": 2053,
+    "completion_tokens": 411,
+    "total_tokens": 2464,
+    "cost": 0.00031623,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.00031623,
+      "upstream_inference_prompt_cost": 0.00024636,
+      "upstream_inference_completions_cost": 0.00006987
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "ms": 5434
+}

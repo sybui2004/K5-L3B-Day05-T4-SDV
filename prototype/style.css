@@ -130,3 +130,25 @@ footer{font-size:12px;color:var(--mut);padding:0 24px 20px}
 .lb-box{max-width:min(92vw,900px);background:#1b1b1b;color:#fff;padding:10px;border-radius:10px;cursor:default}
 .lb-box img{display:block;max-width:100%;max-height:72vh;margin:0 auto;border-radius:6px}
 .lb-cap{font-size:13px;line-height:1.45;margin:8px 2px}
+
+/* ---------- Chế độ Demo: Script vs AI Workflow ---------- */
+.mode-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:8px 0 12px;background:#f8f9fa;border:1.5px solid #d0d7de;border-radius:12px;padding:8px 14px}
+.mode-switch{display:inline-flex;align-items:center;gap:6px}
+.mode-lbl{font-size:13px;font-weight:700;color:var(--ink);margin-right:4px}
+.mode-btn{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.mode-btn:hover{background:#f0ede6}
+.mode-btn.on[data-mode="script"]{background:#1f2422;color:#fff;border-color:#1f2422}
+.mode-btn.on[data-mode="ai"]{background:#3b2f6b;color:#fff;border-color:#3b2f6b;box-shadow:0 0 0 2px rgba(59,47,107,.2)}
+.mode-desc{font-size:12.5px;color:var(--mut);font-style:italic}
+
+.ai-banner{background:#ede9fe;border:1.5px solid #8b5cf6;color:#4c1d95;border-radius:10px;padding:7px 10px;font-size:12px;margin:6px 2px;display:flex;align-items:center;gap:6px}
+.ai-banner:empty{display:none}
+
+.ai-badge-flow{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11.5px;font-weight:700;margin-bottom:6px}
+.ai-badge-flow.hitl{background:#fee2e2;color:#b91c1c;border:1px solid #f87171}
+.ai-badge-flow.auto{background:#dcfce7;color:#15803d;border:1px solid #86efac}
+.ai-badge-flow.ask{background:#fef3c7;color:#b45309;border:1px solid #fde047}
+
+.card-ai-sai{border:2px solid #ef4444;background:#fff5f5;border-radius:10px;padding:10px;margin:8px 0}
+.card-ai-sai h4{margin:0 0 4px;color:#b91c1c;font-size:13px;display:flex;align-items:center;gap:6px}
+.card-ai-sai p{margin:0 0 6px;font-size:12.5px;color:#374151}

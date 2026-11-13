@@ -1,0 +1,60 @@
+{
+  "thoi_gian": "2026-11-13T03:29:38.632Z",
+  "ca": "K1",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "tenDon": "Áo thun nam cotton, size L",
+    "buyer": "Mình đặt áo size L mà nhận được size M, mặc không vừa. Shop cũng nhắn nhận là gửi nhầm rồi. Mình muốn trả hàng hoàn tiền thì làm sao?",
+    "lucDat": "Áo thun cotton, size L (ngực 104 cm)",
+    "hienTai": "Áo thun cotton, size L (ngực 104 cm)",
+    "ngayDat": "03/11",
+    "ngaySua": null,
+    "boiCanh": "Giao 06/11. Người mua đã đính kèm 2 ảnh: tem size trên cổ áo ghi \"M\", áo trải phẳng. Trong chat Shopee của đơn này, shop đã nhắn: \"Xin lỗi bạn, shop gửi nhầm size\". Shop chưa bấm Chấp nhận trả hàng trong Kênh Người Bán. Người mua chưa gửi yêu cầu trả hàng."
+  },
+  "ket_qua": {
+    "mo_ta_luc_dat_ghi": "Áo thun cotton, size L (ngực 104 cm)",
+    "nguoi_mua_nhan": "Áo size M (tem cổ ghi M)",
+    "lech": "co",
+    "can_cu": [
+      {
+        "trang_thai": "ok",
+        "noi_dung": "Mô tả lúc đặt ngày 03/11 ghi rõ size L, nhưng ảnh tem cổ áo người mua đính kèm cho thấy size M."
+      },
+      {
+        "trang_thai": "ok",
+        "noi_dung": "Shop đã thừa nhận gửi nhầm size trong chat Shopee của đơn này."
+      },
+      {
+        "trang_thai": "na",
+        "noi_dung": "Mô tả hiện tại không bị sửa sau khi bán."
+      }
+    ],
+    "ket_luan": "khong_dung_mo_ta",
+    "con_thieu": [],
+    "cau_tra_loi": "Mình đã so với mô tả lúc đặt ngày 03/11, thấy áo bạn nhận được là size M, trong khi mô tả ghi size L, và shop cũng đã thừa nhận gửi nhầm. Trong chat này đã có sẵn bản nháp yêu cầu trả hàng hoàn tiền, bạn xem lại rồi bấm 'Gửi yêu cầu' nhé. Shop có 48 giờ để phản hồi sau khi bạn gửi."
+  },
+  "usage": {
+    "prompt_tokens": 2098,
+    "completion_tokens": 389,
+    "total_tokens": 2487,
+    "cost": 0.000121282,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 2048,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.000121282,
+      "upstream_inference_prompt_cost": 0.000055152,
+      "upstream_inference_completions_cost": 0.00006613
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "ms": 3861
+}

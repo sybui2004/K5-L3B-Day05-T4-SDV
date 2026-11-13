@@ -1,0 +1,34 @@
+{
+  "thoi_gian": "2026-11-13T04:42:52.366Z",
+  "ca": "wf-K5",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K5",
+    "buyer": "Tai nghe fake rõ ràng, shop lừa đảo. KHOÁ SHOP NÀY ĐI!",
+    "currentOrderId": "D3",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tai nghe fake rõ ràng, shop lừa đảo. KHOÁ SHOP NÀY ĐI!"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua tố cáo hàng giả, shop lừa đảo và yêu cầu khoá shop. Đây là tình huống nghiêm trọng thuộc thẩm quyền của bộ phận chuyên trách kiểm tra hàng giả. AI không được tự ý phạt shop hay hứa hẹn gì về việc khoá shop. Cần chuyển hồ sơ sang bộ phận chuyên trách (HITL) để xử lý.",
+    "hanh_dong": "chuyen_hang_gia",
+    "don_hang": "D3",
+    "ly_do_khieu_nai": "Người mua tố hàng giả, shop lừa đảo, yêu cầu khoá shop",
+    "do_tu_tin": "cao",
+    "ai_nhan_sai": false,
+    "can_hitl": true,
+    "ly_do_hitl": "Người mua tố cáo hàng giả, shop lừa đảo và yêu cầu khoá shop - thuộc thẩm quyền bộ phận chuyên trách kiểm tra hàng giả",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Cảm ơn bạn đã phản ánh. Với trường hợp nghi ngờ hàng giả, Shopee sẽ chuyển hồ sơ sang bộ phận chuyên trách kiểm tra hàng giả để xác minh trong vòng 24h. Bạn vui lòng cung cấp thêm video/quay chi tiết sản phẩm (tem, nhãn, mã vạch, chất liệu) để hỗ trợ quá trình kiểm tra. Shopee sẽ có kết quả và thông báo cho bạn sớm nhất.",
+    "cau_hoi_them": "Bạn có thể cung cấp thêm video hoặc hình ảnh chi tiết về sản phẩm (tem, nhãn, mã vạch, chất liệu) để hỗ trợ quá trình kiểm tra không?",
+    "can_cu": [],
+    "con_thieu": [
+      "bằng chứng chi tiết về hàng giả (tem, nhãn, mã vạch, video)"
+    ]
+  },
+  "ms": 8549
+}

@@ -166,6 +166,15 @@ const CASES = {
 <p>Bạn nhắn trực tiếp cho shop qua chat trong app nhé; nếu shop không trả lời trong 48 giờ, mình chuyển nhân viên hỗ trợ.</p>`,
   },
 
+  K_SAI: {
+    tab: 'K-Sai · AI nhận sai → HITL', badge: 'tự nhận sai', kieu: 'aiNhanSai', order: 'D2',
+    buyer: 'Bạn nói sai rồi! Tôi đo lòng rổ thực tế chỉ được 4.2L chứ không phải 5L như shop bảo, mà lúc tôi đặt shop ghi rõ lòng nồi 6L! Bạn xem lại đi!',
+    moTa: { lucDat: 'Dung tích <mark>lòng nồi 6L</mark>, công suất 1700W', hienTai: 'Dung tích <mark>tổng 6L, lòng rổ 5L</mark>, công suất 1700W', ngayDat: '05/11', ngaySua: '09/11' },
+    boiCanh: 'Người mua phản bác phân tích trước đó của AI. AI phát hiện mâu thuẫn trong dữ liệu đo lường và quy chuẩn kỹ thuật dung tích → AI tự nhận thức khả năng mình hiểu sai, kích hoạt HITL chuyển nhân viên sàn Shopee xử lý trực tiếp.',
+    isRebuttal: true,
+    daCo: ['d2-long-noi', 'd2-video-ca-dong'],
+  },
+
   CALA: {
     tab: 'Ca lạ (gõ tự do)', badge: 'demo', kieu: 'caLa',
     chao: 'Mình là <b>trợ lý AI</b> của Shopee. Mình giúp bạn gửi khiếu nại "hàng không đúng mô tả": so với mô tả lúc bạn đặt, xin đúng bằng chứng còn thiếu, hoặc chuyển nhân viên. Mình <b>không tự quyết</b> hoàn tiền hay từ chối. Bạn gặp vấn đề gì?',

@@ -1,0 +1,44 @@
+{
+  "thoi_gian": "2026-11-13T04:51:49.337Z",
+  "ca": "wf-K_SAI",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K_SAI",
+    "buyer": "Bạn nói sai rồi! Tôi đo lòng rổ thực tế chỉ được 4.2L chứ không phải 5L như shop bảo, mà lúc tôi đặt shop ghi rõ lòng nồi 6L! Bạn xem lại đi!",
+    "currentOrderId": "D2",
+    "moTa": {
+      "lucDat": "Dung tích <mark>lòng nồi 6L</mark>, công suất 1700W",
+      "hienTai": "Dung tích <mark>tổng 6L, lòng rổ 5L</mark>, công suất 1700W",
+      "ngayDat": "05/11",
+      "ngaySua": "09/11"
+    },
+    "boiCanh": "Người mua phản bác phân tích trước đó của AI. AI phát hiện mâu thuẫn trong dữ liệu đo lường và quy chuẩn kỹ thuật dung tích → AI tự nhận thức khả năng mình hiểu sai, kích hoạt HITL chuyển nhân viên sàn Shopee xử lý trực tiếp.",
+    "att": [
+      "d2-long-noi",
+      "d2-video-ca-dong"
+    ],
+    "isRebuttal": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Bạn nói sai rồi! Tôi đo lòng rổ thực tế chỉ được 4.2L chứ không phải 5L như shop bảo, mà lúc tôi đặt shop ghi rõ lòng nồi 6L! Bạn xem lại đi!"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua phản bác trực tiếp phân tích trước đó của AI, khẳng định AI hiểu sai về dung tích lòng rổ. Mô tả lúc đặt (05/11) ghi 'lòng nồi 6L' nhưng mô tả hiện tại (09/11) đã sửa thành 'tổng 6L, lòng rổ 5L'. Người mua đo thực tế lòng rổ 4.2L, mâu thuẫn với cả hai mô tả. AI phát hiện mình có thể đã nhận định sai về quy chuẩn kỹ thuật dung tích, cần chuyển nhân viên sàn thẩm định.",
+    "hanh_dong": "chuyen_nhan_vien",
+    "don_hang": "D2",
+    "ly_do_khieu_nai": "hàng không đúng mô tả",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": true,
+    "can_hitl": true,
+    "ly_do_hitl": "AI tự nhận sai do người mua phản bác phân tích trước đó, mô tả lúc đặt và hiện tại có sự khác biệt về dung tích lòng nồi/rổ, cần nhân viên sàn thẩm định thực tế.",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Cảm ơn bạn đã phản hồi. Tôi nhận thấy mình đã hiểu chưa chính xác về thông số dung tích lòng nồi và lòng rổ trong đơn hàng D2 của bạn. Mô tả lúc bạn đặt (ngày 05/11) ghi 'lòng nồi 6L', trong khi mô tả hiện tại shop đã sửa thành 'tổng 6L, lòng rổ 5L'. Bạn đo thực tế lòng rổ chỉ 4.2L, có sự khác biệt cần kiểm tra. Để đảm bảo quyền lợi của bạn, tôi sẽ chuyển ngay hồ sơ khiếu nại này đến nhân viên sàn Shopee thẩm định trực tiếp trong vòng 24 giờ. Bạn vui lòng giữ nguyên bằng chứng (ảnh lòng nồi, video) để hỗ trợ quá trình xác minh. Xin lỗi bạn vì sự nhầm lẫn trước đó.",
+    "cau_hoi_them": "",
+    "can_cu": [],
+    "con_thieu": []
+  },
+  "ms": 9907
+}
