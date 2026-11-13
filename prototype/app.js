@@ -70,7 +70,8 @@ function reset(caseId) {
   document.querySelectorAll('#cases button').forEach((b) => b.classList.toggle('on', b.dataset.id === caseId));
   setOrder(null);
   renderSeller(); renderStaff(); renderLog();
-  if (demoMode === 'ai') {
+  // Ca lạ chưa có tin người mua: chỉ chào, đợi người dùng gõ (không gọi AI với tin rỗng)
+  if (demoMode === 'ai' && S.c.buyer) {
     triggerAiWorkflow(S.c);
   } else {
     FLOWS[S.c.kieu].start(S.c);
@@ -484,7 +485,7 @@ async function triggerAiWorkflow(c, extraPrompt = '', isRebuttal = false) {
       moTa: c.moTa || S.mt,
       boiCanh: c.boiCanh || '',
       att: [...S.att],
-      isRebuttal: Boolean(isRebuttal || c.isRebuttal || /(sai rồi|nhầm rồi|xem lại đi|tôi đo cả vỏ|không đúng)/i.test(buyerMsg)),
+      isRebuttal: Boolean(isRebuttal || c.isRebuttal || /(bạn|AI|trợ lý)[^.!?]{0,12}(nói sai|nhầm|sai rồi|hiểu sai)|xem lại đi|nói sai rồi/i.test(buyerMsg)),
       messages: S.chatHistory || [{ role: 'user', content: buyerMsg }]
     };
 
