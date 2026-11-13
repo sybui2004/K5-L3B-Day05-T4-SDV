@@ -1,0 +1,12 @@
+{
+  "name": "t4-prototype",
+  "private": true,
+  "type": "module",
+  "description": "Prototype T4 - trợ lý khiếu nại không đúng mô tả, kèm một lời gọi AI thật qua OpenRouter",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=20.12"
+  }
+}

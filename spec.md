@@ -1,6 +1,6 @@
 # Bài nộp LAB5 — T4 Thương mại điện tử · Nhóm SDV
 
-**Lớp:** L3B · **Bàn / zone:** ____ · **Track:** T4 — "Trò chuyện với Shopee", khiếu nại hàng không đúng mô tả
+**Lớp:** L3B · **Bàn / zone:** 4/2 · **Track:** T4 — "Trò chuyện với Shopee", khiếu nại hàng không đúng mô tả
 
 | Họ và Tên | Mã Học Viên | Việc đã làm |
 |---|---|---|
