@@ -1,0 +1,62 @@
+{
+  "thoi_gian": "2026-11-13T03:17:38.990Z",
+  "ca": "K3",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "tenDon": "Nồi chiên không dầu 6L",
+    "buyer": "Nồi chiên ghi 6 lít mà mình đo lòng nồi chỉ được 5 lít. Không đúng mô tả.",
+    "lucDat": "Dung tích lòng nồi 6L, công suất 1700W",
+    "hienTai": "Dung tích tổng 6L, lòng rổ 5L, công suất 1700W",
+    "ngayDat": "05/11",
+    "ngaySua": "09/11",
+    "boiCanh": "Giao 08/11. Người mua đã đính kèm 1 ảnh lòng nồi (không thấy vạch đo). Chưa có video đo bằng ca đong. Người mua chưa gửi yêu cầu trả hàng nên shop chưa phản hồi."
+  },
+  "ket_qua": {
+    "mo_ta_luc_dat_ghi": "Dung tích lòng nồi 6L",
+    "nguoi_mua_nhan": "Đo lòng nồi được 5L",
+    "lech": "co",
+    "can_cu": [
+      {
+        "trang_thai": "ok",
+        "noi_dung": "Mô tả lúc đặt ngày 05/11 ghi rõ 'Dung tích lòng nồi 6L', nhưng người mua đo được 5L."
+      },
+      {
+        "trang_thai": "na",
+        "noi_dung": "Người bán đã sửa mô tả sau khi bán (ngày 09/11), thay đổi thành 'lòng rổ 5L'."
+      },
+      {
+        "trang_thai": "warn",
+        "noi_dung": "Người mua có ảnh lòng nồi nhưng chưa thấy vạch đo, chưa có video đo bằng ca đong."
+      }
+    ],
+    "ket_luan": "khong_dung_mo_ta",
+    "con_thieu": [
+      "Video hoặc ảnh chụp rõ quá trình đo dung tích lòng nồi bằng ca đong"
+    ],
+    "cau_tra_loi": "Mình đã so sánh với mô tả lúc đặt ngày 05/11, ghi rõ 'Dung tích lòng nồi 6L', nhưng bạn đo được 5L. Trong chat đã có sẵn bản nháp yêu cầu trả hàng hoàn tiền, bạn xem lại rồi bấm 'Gửi yêu cầu' nhé. Nếu cần, bạn có thể bổ sung video đo dung tích để củng cố thêm bằng chứng."
+  },
+  "usage": {
+    "prompt_tokens": 2058,
+    "completion_tokens": 443,
+    "total_tokens": 2501,
+    "cost": 0.00032227,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.00032227,
+      "upstream_inference_prompt_cost": 0.00024696,
+      "upstream_inference_completions_cost": 0.00007531
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "ms": 4624
+}
