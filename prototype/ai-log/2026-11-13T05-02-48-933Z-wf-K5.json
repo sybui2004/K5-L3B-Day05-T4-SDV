@@ -1,0 +1,48 @@
+{
+  "thoi_gian": "2026-11-13T05:02:48.933Z",
+  "ca": "wf-K5",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "K5",
+    "buyer": "Tai nghe fake rõ ràng, âm thanh rè, shop lừa đảo. KHOÁ SHOP NÀY ĐI không thì mình bóc phốt lên group 200k mem",
+    "currentOrderId": "D3",
+    "moTa": {
+      "lucDat": "<mark>Hàng chính hãng, tem phân phối + serial tra cứu được</mark>",
+      "hienTai": "<mark>Hàng chính hãng, tem phân phối + serial tra cứu được</mark>",
+      "ngayDat": "04/11",
+      "ngaySua": null
+    },
+    "boiCanh": "",
+    "att": [
+      "d3-tem-serial"
+    ],
+    "isRebuttal": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "Tai nghe fake rõ ràng, âm thanh rè, shop lừa đảo. KHOÁ SHOP NÀY ĐI không thì mình bóc phốt lên group 200k mem"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua tố cáo hàng giả, yêu cầu khoá shop, đe doạ bóc phốt. Đây là tình huống bắt buộc HITL theo quy tắc 'chuyen_hang_gia'. AI không được tự ý phạt shop hay hứa phạt. Cần chuyển hồ sơ sang bộ phận chuyên trách kiểm tra hàng giả trong 24h. AI không nên tranh luận về tem/serial hay chất lượng âm thanh vì đó là vấn đề kỹ thuật cần thẩm định.",
+    "hanh_dong": "chuyen_hang_gia",
+    "don_hang": "D3",
+    "ly_do_khieu_nai": "hàng không đúng mô tả",
+    "do_tu_tin": "cao",
+    "ai_nhan_sai": false,
+    "can_hitl": true,
+    "ly_do_hitl": "Người mua tố cáo hàng giả, yêu cầu khoá shop, đe doạ bóc phốt. Cần chuyển bộ phận chuyên trách kiểm tra hàng giả.",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Cảm ơn bạn đã phản ánh. Với trường hợp nghi ngờ hàng giả, Shopee sẽ chuyển hồ sơ sang bộ phận chuyên trách kiểm tra trong vòng 24h. Bạn vui lòng giữ nguyên hiện trạng hàng và cung cấp thêm video/lỗi kỹ thuật (nếu có) để hỗ trợ quá trình xác minh. Chúng tôi sẽ liên hệ lại ngay khi có kết quả. Xin cảm ơn!",
+    "cau_hoi_them": "",
+    "can_cu": [
+      {
+        "trang_thai": "na",
+        "noi_dung": "Người mua tố cáo hàng giả, yêu cầu khoá shop, đe doạ bóc phốt."
+      }
+    ],
+    "con_thieu": []
+  },
+  "ms": 10229
+}

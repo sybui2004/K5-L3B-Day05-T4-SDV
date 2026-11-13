@@ -1,0 +1,40 @@
+{
+  "thoi_gian": "2026-11-13T06:40:56.500Z",
+  "ca": "wf-CALA",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "CALA",
+    "buyer": "",
+    "moTa": null,
+    "boiCanh": "",
+    "att": [],
+    "isRebuttal": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": ""
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua chưa gửi tin nhắn nào, chưa có đơn hàng, mô tả hay bằng chứng. Cần chờ người mua nhập nội dung khiếu nại trước khi xác định workflow.",
+    "hanh_dong": "hoi_lai",
+    "don_hang": "Chưa xác định",
+    "ly_do_khieu_nai": "Chưa rõ",
+    "do_tu_tin": "thap",
+    "ai_nhan_sai": false,
+    "can_hitl": true,
+    "ly_do_hitl": "Độ tin cậy thấp hoặc AI tự phát hiện nghi vấn nhận định sai",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Chào bạn, mình là trợ lý hỗ trợ khiếu nại của Shopee. Bạn vui lòng cho mình biết đơn hàng nào đang gặp vấn đề và mô tả cụ thể lỗi sai (ví dụ: sai size, sai màu, thiếu phụ kiện...) để mình kiểm tra giúp bạn nhé!",
+    "cau_hoi_them": "Bạn có thể cung cấp mã đơn hàng hoặc ảnh chụp sản phẩm nhận được so với mô tả không?",
+    "can_cu": [],
+    "con_thieu": [
+      "tin_nhan_nguoi_mua",
+      "don_hang",
+      "mo_ta_luc_dat",
+      "bang_chung"
+    ]
+  },
+  "ms": 6203
+}

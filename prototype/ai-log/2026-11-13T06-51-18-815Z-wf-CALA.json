@@ -1,0 +1,35 @@
+{
+  "thoi_gian": "2026-11-13T06:51:18.816Z",
+  "ca": "wf-CALA",
+  "model": "deepseek/deepseek-v4-flash",
+  "dau_vao": {
+    "caseId": "CALA",
+    "buyer": "mình muốn đổi sang màu khác, không trả hàng",
+    "moTa": null,
+    "boiCanh": "",
+    "att": [],
+    "isRebuttal": false,
+    "messages": [
+      {
+        "role": "user",
+        "content": "mình muốn đổi sang màu khác, không trả hàng"
+      }
+    ]
+  },
+  "ket_qua": {
+    "phan_tich": "Người mua yêu cầu đổi sang màu khác, không phải trả hàng. Đây là yêu cầu ngoài phạm vi khiếu nại 'hàng không đúng mô tả' (chỉ hỗ trợ trả hàng/hoàn tiền nếu sai mô tả). AI không có quyền xử lý đổi hàng, cần chuyển nhân viên sàn.",
+    "hanh_dong": "chuyen_nhan_vien",
+    "don_hang": "Chưa xác định",
+    "ly_do_khieu_nai": "Yêu cầu đổi hàng (ngoài phạm vi)",
+    "do_tu_tin": "cao",
+    "ai_nhan_sai": false,
+    "can_hitl": true,
+    "ly_do_hitl": "Người mua yêu cầu đổi sang màu khác, không phải trả hàng. Đây là yêu cầu ngoài phạm vi khiếu nại 'hàng không đúng mô tả', AI không có thẩm quyền xử lý đổi hàng. Cần chuyển nhân viên sàn Shopee hỗ trợ.",
+    "ket_luan": "chua_du_can_cu",
+    "cau_tra_loi": "Chào bạn, yêu cầu đổi sang màu khác của bạn nằm ngoài phạm vi khiếu nại 'hàng không đúng mô tả' mà tôi có thể hỗ trợ. Tôi sẽ chuyển yêu cầu của bạn đến nhân viên sàn Shopee để được xử lý trong thời gian sớm nhất. Cảm ơn bạn đã thông cảm!",
+    "cau_hoi_them": "",
+    "can_cu": [],
+    "con_thieu": []
+  },
+  "ms": 7817
+}

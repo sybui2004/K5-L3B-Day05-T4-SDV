@@ -244,7 +244,7 @@ function fallbackWorkflow(d) {
   const allText = `${text} ${history}`;
 
   // Kịch bản AI tự nhận sai khi người dùng phản bác
-  if (/(sai rồi|nói sai|nhầm rồi|không đúng|tôi đo cả vỏ|đâu phải thế|xem lại đi|hiểu sai)/.test(text) || d.isRebuttal) {
+  if (/(bạn|ai|trợ lý)[^.!?]{0,12}(nói sai|nhầm|sai rồi|hiểu sai)|nói sai rồi|đâu phải thế|xem lại đi/.test(text) || d.isRebuttal) {
     return {
       phan_tich: 'Người mua phản bác nhận định trước đó. AI nhận diện có khả năng hiểu nhầm thông số kỹ thuật → Tự nhận sai và kích hoạt HITL tới nhân viên sàn.',
       hanh_dong: 'chuyen_nhan_vien',
